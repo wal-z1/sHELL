@@ -1,0 +1,17 @@
+# Binaries and executables
+*.o
+*.obj
+*.exe
+shell
+shell.exe
+
+# Build artifacts
+build/
+bin/
+dist/
+
+# Editor and IDE metadata
+.vscode/
+.idea/
+*.swp
+*~
