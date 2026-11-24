@@ -1,3 +1,6 @@
+# Gitignore itself
+.gitignore
+
 # Binaries and executables
 *.o
 *.obj
