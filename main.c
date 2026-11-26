@@ -1,5 +1,4 @@
-#define _POSIX_C_SOURCE 200809L
-
+#include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -18,6 +17,30 @@ ssize_t read_line(FILE *stream, char **line_buf, size_t *buf_cap)
 
   return getline(line_buf, buf_cap, stream);
 }
+/*
+ * Replaces control and special whitespace characters (\n, \r, \t, \v, \f, \a, \b, etc.)
+ * with spaces in-place while preserving the null terminator.
+ */
+char *sanatize_input(char *line)
+{
+  if (line == NULL)
+  {
+    return NULL;
+  }
+
+  for (size_t i = 0; line[i] != '\0'; i++)
+  {
+    unsigned char ch = (unsigned char)line[i];
+    if (iscntrl(ch) || isspace(ch))
+    {
+      line[i] = ' ';
+    }
+  }
+
+  return line;
+}
+
+char **split_string()
 
 int main(void)
 {
@@ -27,6 +50,14 @@ int main(void)
   if (read_line(stdin, &line, &capacity) == -1)
   {
     printf("error reading line from stdin\n");
+    free(line);
+    return EXIT_FAILURE;
+  }
+
+  line = sanatize_input(line);
+  if (line == NULL)
+  {
+    printf("error sanitizing input\n");
     free(line);
     return EXIT_FAILURE;
   }
