@@ -1,30 +1,37 @@
+#define _POSIX_C_SOURCE 200809L
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <sys/types.h>
 
-int main(int argc, char **argv[])
+/**
+ Reads a line from `stream` into `*line_buf`
+  growing `*buf_cap` as needed by getline
+Returns the number of characters read, or -1 on error, EOF, or invalid args.
+*/
+ssize_t read_line(FILE *stream, char **line_buf, size_t *buf_cap)
 {
-  char *line = NULL;
-  size_t len = 0;
-
-  if (argc < 2)
+  if (stream == NULL || line_buf == NULL || buf_cap == NULL)
   {
-    printf("command less then two arguments", argv[0]);
-    return 1;
+    return -1;
   }
-  read_line_stdin_getline(stdin, &line, &len);
+
+  return getline(line_buf, buf_cap, stream);
 }
 
-int read_line_stdin_getline(FILE *fp, char **lineptr, size_t *n)
+int main(void)
 {
-  int nread;
-  if (fp == NULL || lineptr == NULL || n == NULL)
+  char *line = NULL;
+  size_t capacity = 0;
+
+  if (read_line(stdin, &line, &capacity) == -1)
   {
-    return -1;
+    printf("error reading line from stdin\n");
+    free(line);
+    return EXIT_FAILURE;
   }
-  if (nread = getline(lineptr, n, fp) == -1)
-  {
-    return -1;
-  }
-  return nread;
+
+  printf("line: %s\n", line);
+  free(line);
+  return EXIT_SUCCESS;
 }
