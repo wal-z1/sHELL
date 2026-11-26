@@ -41,6 +41,26 @@ char *sanatize_input(char *line)
 }
 
 char **split_string()
+{
+}
+
+/**
+ * Frees a NULL-terminated array of heap-allocated strings
+ * along with the array pointer itself.
+ */
+void free_string_array(char **arr)
+{
+  if (arr == NULL)
+  {
+    return;
+  }
+
+  for (size_t i = 0; arr[i] != NULL; i++)
+  {
+    free(arr[i]);
+  }
+  free(arr);
+}
 
 int main(void)
 {
